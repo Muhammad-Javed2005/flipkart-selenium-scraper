@@ -1,4 +1,4 @@
-# 📦 Required Libraries
+#  Required Libraries
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -12,29 +12,29 @@ import json
 import time
 from datetime import datetime
 
-# ✅ Chrome Setup
+#  Chrome Setup
 options = Options()
 options.add_argument("--headless")  # Run headless (background)
 options.add_argument("--disable-blink-features=AutomationControlled")
 options.add_argument("--window-size=1920,1080")
 
-# ✅ Initialize Chrome Driver
+#  Initialize Chrome Driver
 driver = webdriver.Chrome(
     service=Service(ChromeDriverManager().install()),
     options=options
 )
 
-# ✅ Data List
+#  Data List
 all_data = []
 
-# ✅ Scrape Pages
+#  Scrape Pages
 for page in range(1, 3):  # Change 3 to 676 to scrape all pages
     print(f"📄 Scraping page {page}...")
     url = f"https://www.flipkart.com/clothing-and-accessories/topwear/tshirt/men-tshirt/pr?sid=clo,ash,ank,edy&page={page}"
     driver.get(url)
     time.sleep(3)  # Allow page to load
 
-    # ❌ Close login popup if it appears
+    #  Close login popup if it appears
     try:
         close_btn = driver.find_element(By.XPATH, '//button[text()="✕"]')
         close_btn.click()
@@ -42,14 +42,14 @@ for page in range(1, 3):  # Change 3 to 676 to scrape all pages
     except:
         pass
 
-    # ✅ Wait until product cards load
+    #  Wait until product cards load
     try:
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "_1xHGtK"))
         )
         products = driver.find_elements(By.CLASS_NAME, "_1xHGtK")
     except:
-        print(f"⚠️ No products found on page {page}")
+        print(f"No products found on page {page}")
         continue
 
     for product in products:
@@ -93,17 +93,17 @@ for page in range(1, 3):  # Change 3 to 676 to scrape all pages
             "available_sizes": sizes
         })
 
-# ✅ Close browser
+#  Close browser
 driver.quit()
 
-# ✅ Data check
+#  Data check
 if not all_data:
-    print("⚠️ No data scraped! Please check class names or network.")
+    print(" No data scraped! Please check class names or network.")
 else:
-    print(f"✅ Total products scraped: {len(all_data)}")
-    print("🔍 Preview:", json.dumps(all_data[:1], indent=2, ensure_ascii=False))
+    print(f"Total products scraped: {len(all_data)}")
+    print(" Preview:", json.dumps(all_data[:1], indent=2, ensure_ascii=False))
 
-# ✅ Save the Data
+#  Save the Data
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 json_file = f"flipkart_data_{timestamp}.json"
 csv_file = f"flipkart_data_{timestamp}.csv"
@@ -118,9 +118,9 @@ df = pd.DataFrame(all_data)
 df.to_csv(csv_file, index=False, encoding='utf-8-sig')
 df.to_excel(excel_file, index=False)
 
-# ✅ Confirmation
-print(f"📁 JSON saved as:  {json_file}")
-print(f"📁 CSV saved as:   {csv_file}")
+# Confirmation
+print(f"JSON saved as:  {json_file}")
+print(f"CSV saved as:   {csv_file}")
 print(f"📁 Excel saved as: {excel_file}")
 
 # Loop ke leye kia karna hogaaaaaaaa.......
